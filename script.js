@@ -30,7 +30,7 @@ const saveToLocalStorage = () => {
 const create = () => {
     const value = input.value.trim();
     if (value) {
-        const name = 'Mimi';
+        const name = 'User';
         const timeStamp = new Date().toLocaleString();
         renderComment({ name, text: value, time: timeStamp, voteCount: 0, replies: [] });
         saveToLocalStorage();
