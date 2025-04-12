@@ -76,7 +76,7 @@ const renderComment = ({ name, text, time, voteCount, replies }) => {
     });
 
     replyBtn.addEventListener('click', () => {
-        if (comment.querySelector('.createReply')) return; 
+        if (comment.querySelector('.createReply')) return;
     
         const replyBox = document.createElement('div');
         replyBox.className = 'createReply';
@@ -92,15 +92,15 @@ const renderComment = ({ name, text, time, voteCount, replies }) => {
         submitReplyBtn.addEventListener('click', () => {
             const replyText = replyInput.value.trim();
             if (replyText) {
-                const replyComment = document.createElement('div');
-                replyComment.className = 'reply-comment';
-                replyComment.textContent = `@${name} ${replyText}`;
+                const time = new Date().toLocaleString();
+                const replyComment = createReplyElement(`@${name} ${replyText}`, time, 0);
                 repliesContainer.appendChild(replyComment);
                 replyBox.remove();
                 saveToLocalStorage();
             }
         });
     });
+    
     
 
     replies.forEach(reply => {
@@ -117,3 +117,52 @@ const renderComment = ({ name, text, time, voteCount, replies }) => {
 
     commentList.appendChild(comment);
 };
+
+function createReplyElement(text, time, voteCount) {
+    const replyComment = document.createElement('div');
+    replyComment.className = 'reply-comment';
+    replyComment.innerHTML = `
+        <div class="reply-meta">
+            <span class="reply-time">${time}</span>
+        </div>
+        <div class="reply-text">${text}</div>
+        <div class="reply-actions">
+            <button class="reply-upvote">👍</button>
+            <span class="reply-vote-count">${voteCount}</span>
+            <button class="reply-downvote">👎</button>
+            <button class="reply-delete">Delete</button>
+        </div>
+    `;
+
+    const upvoteBtn = replyComment.querySelector('.reply-upvote');
+    const downvoteBtn = replyComment.querySelector('.reply-downvote');
+    const deleteBtn = replyComment.querySelector('.reply-delete');
+    const voteSpan = replyComment.querySelector('.reply-vote-count');
+
+    let count = parseInt(voteCount);
+
+    upvoteBtn.addEventListener('click', () => {
+        count++;
+        voteSpan.textContent = count;
+        saveToLocalStorage();
+    });
+
+    downvoteBtn.addEventListener('click', () => {
+        count--;
+        voteSpan.textContent = count;
+        saveToLocalStorage();
+    });
+
+    deleteBtn.addEventListener('click', () => {
+        replyComment.remove();
+        saveToLocalStorage();
+    });
+
+    return replyComment;
+}
+
+replies.forEach(reply => {
+    const replyComment = createReplyElement(reply, time, 0); // default voteCount for old ones
+    repliesContainer.appendChild(replyComment);
+});
+
