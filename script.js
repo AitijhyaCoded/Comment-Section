@@ -13,27 +13,30 @@ const create = () => {
             <div class="meta"><strong>${name}</strong> • ${timeStamp}</div>
             <div class="text">${value}</div>
             <div class="actions">
-                <button onclick="upvote(this)" class="upvote">👍</button>
+                <button class="upvote">👍</button>
                 <span class="vote-count">0</span>
-                <button onclick="downvote(this)" class="downvote">👎</button>
+                <button class="downvote">👎</button>
                 <button class="reply-btn">Reply</button>
             </div>
             <div class="replies"></div>
         `;
 
+        const upvoteBtn = comment.querySelector('.upvote');
+        const downvoteBtn = comment.querySelector('.downvote');
+        const voteCount = comment.querySelector('.vote-count');
+        let count = 0;
+
+        upvoteBtn.addEventListener('click', () => {
+            count++;
+            voteCount.textContent = count;
+        });
+
+        downvoteBtn.addEventListener('click', () => {
+            count--;
+            voteCount.textContent = count;
+        });
+
         commentList.appendChild(comment);
         input.value = '';
     }
-};
-
-const upvote = (btn) => {
-    const voteCount = btn.parentElement.querySelector('.vote-count');
-    let count = parseInt(voteCount.textContent);
-    voteCount.textContent = count + 1;
-};
-
-const downvote = (btn) => {
-    const voteCount = btn.parentElement.querySelector('.vote-count');
-    let count = parseInt(voteCount.textContent);
-    voteCount.textContent = count - 1;
 };
